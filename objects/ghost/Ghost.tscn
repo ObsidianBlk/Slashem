@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://ddc6uqt6s5cpv"]
+
+[ext_resource type="Script" path="res://objects/ghost/Ghost.gd" id="1_3vcmb"]
+[ext_resource type="Texture2D" uid="uid://ch76m21gtrq87" path="res://assets/graphics/monochrome-transparent_packed.png" id="1_huath"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_31dqr"]
+radius = 2.0
+height = 6.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yrhr0"]
+radius = 16.0
+
+[node name="Ghost" type="CharacterBody2D" groups=["ghost", "moblings"]]
+collision_layer = 8
+collision_mask = 3
+script = ExtResource("1_3vcmb")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_huath")
+region_enabled = true
+region_rect = Rect2(432, 96, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_31dqr")
+
+[node name="NAgent" type="NavigationAgent2D" parent="."]
+path_desired_distance = 8.0
+target_desired_distance = 8.0
+
+[node name="AttackZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackZone"]
+shape = SubResource("CircleShape2D_yrhr0")
+
+[connection signal="body_entered" from="AttackZone" to="." method="_on_attack_zone_body_entered"]
+[connection signal="body_exited" from="AttackZone" to="." method="_on_attack_zone_body_exited"]

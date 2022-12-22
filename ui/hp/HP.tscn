@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://cnnuj3y4mkwgo"]
+
+[ext_resource type="Script" path="res://ui/hp/HP.gd" id="1_fl0hr"]
+
+[node name="HP" type="MarginContainer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -42.0
+offset_right = 179.0
+grow_vertical = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+script = ExtResource("1_fl0hr")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 171.0
+offset_bottom = 34.0
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+offset_right = 31.0
+offset_bottom = 26.0
+text = "HP: "
+
+[node name="ProgressBar" type="ProgressBar" parent="HBoxContainer"]
+custom_minimum_size = Vector2(128, 16)
+offset_left = 35.0
+offset_top = 5.0
+offset_right = 163.0
+offset_bottom = 21.0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+show_percentage = false

@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://8qu2xfbqea52"]
+
+[ext_resource type="Script" path="res://objects/player/Player.gd" id="1_3118y"]
+[ext_resource type="Texture2D" uid="uid://ch76m21gtrq87" path="res://assets/graphics/monochrome-transparent_packed.png" id="1_c1fmy"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tdcd6"]
+radius = 8.0
+height = 24.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_igsim"]
+radius = 3.0
+height = 10.0
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+collision_layer = 2
+collision_mask = 9
+script = ExtResource("1_3118y")
+
+[node name="Stuff" type="Node2D" parent="."]
+
+[node name="HitZone" type="Area2D" parent="Stuff"]
+position = Vector2(13, -3)
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stuff/HitZone"]
+position = Vector2(-1, 0)
+shape = SubResource("CapsuleShape2D_tdcd6")
+
+[node name="Weapon" type="Sprite2D" parent="Stuff"]
+position = Vector2(8, -4)
+texture = ExtResource("1_c1fmy")
+centered = false
+offset = Vector2(-4, -12)
+region_enabled = true
+region_rect = Rect2(544, 96, 16, 16)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_c1fmy")
+centered = false
+offset = Vector2(-8, -15)
+region_enabled = true
+region_rect = Rect2(400, 0, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_igsim")
+
+[connection signal="body_entered" from="Stuff/HitZone" to="." method="_on_hit_zone_body_entered"]
+[connection signal="body_exited" from="Stuff/HitZone" to="." method="_on_hit_zone_body_exited"]

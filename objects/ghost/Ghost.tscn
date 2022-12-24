@@ -3,11 +3,11 @@
 [ext_resource type="Script" path="res://objects/ghost/Ghost.gd" id="1_3vcmb"]
 [ext_resource type="Texture2D" uid="uid://ch76m21gtrq87" path="res://assets/graphics/monochrome-transparent_packed.png" id="1_huath"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_31dqr"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_obo3g"]
 radius = 2.0
 height = 6.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_yrhr0"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_h5rqt"]
 radius = 16.0
 
 [node name="Ghost" type="CharacterBody2D" groups=["ghost", "moblings"]]
@@ -17,24 +17,27 @@ script = ExtResource("1_3vcmb")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_huath")
+centered = false
+offset = Vector2(-8, -15)
 region_enabled = true
 region_rect = Rect2(432, 96, 16, 16)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 5)
+position = Vector2(0, -1)
 rotation = 1.5708
-shape = SubResource("CapsuleShape2D_31dqr")
+shape = SubResource("CapsuleShape2D_obo3g")
 
 [node name="NAgent" type="NavigationAgent2D" parent="."]
 path_desired_distance = 8.0
-target_desired_distance = 8.0
+target_desired_distance = 16.0
 
 [node name="AttackZone" type="Area2D" parent="."]
+position = Vector2(0, -7)
 collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackZone"]
-shape = SubResource("CircleShape2D_yrhr0")
+shape = SubResource("CircleShape2D_h5rqt")
 
 [connection signal="body_entered" from="AttackZone" to="." method="_on_attack_zone_body_entered"]
 [connection signal="body_exited" from="AttackZone" to="." method="_on_attack_zone_body_exited"]

@@ -19,15 +19,16 @@ const MAX_HP : float = 100.0
 # ------------------------------------------------------------------------------
 var _dir : Vector2 = Vector2.ZERO
 var _bodies : Array = []
-var _swinging : bool = false
 var _attacking : bool = false
 var _hp : float = MAX_HP
 
 # ------------------------------------------------------------------------------
 # Onready Variables
 # ------------------------------------------------------------------------------
-@onready var _weapon : Sprite2D = $Stuff/Weapon
-@onready var _stuff : Node2D = $Stuff
+@onready var _weapon : Sprite2D = $Swivel/Weapon
+@onready var _swivel : Node2D = $Swivel
+@onready var _character : Node2D = $Character
+@onready var _anim : AnimationPlayer = $Character/Anim
 
 # ------------------------------------------------------------------------------
 # Override Methods
@@ -48,8 +49,12 @@ func _unhandled_input(event : InputEvent) -> void:
 
 
 func _physics_process(_delta : float) -> void:
-	if _dir.x != 0.0:
-		_Flip(_dir.x < 0.0)
+	if _dir.x != 0.0 or _dir.y != 0.0:
+		_PlayAnim("run")
+		if _dir.x != 0.0:
+			_Flip(_dir.x < 0.0)
+	else:
+		_PlayAnim("idle")
 	velocity = _dir * SPEED
 	move_and_slide()
 
@@ -58,20 +63,25 @@ func _physics_process(_delta : float) -> void:
 # Private Methods
 # ------------------------------------------------------------------------------
 func _SwingSword() -> void:
-	if _swinging:
+	if _attacking:
 		return
 	
-	_swinging = true
+	_attacking = true
 	var tween : Tween = create_tween()
 	tween.tween_method(_on_sword_attack, 0.0, SWORD_ARC, 0.1)
 	tween.tween_method(_on_sword_return, SWORD_ARC, 0.0, 0.25)
 	await tween.finished
-	_swinging = false
+	_attacking = false
 	#tween.finished.connect(func(): _swinging = false)
 
 func _Flip(e : bool = true) -> void:
-	_stuff.scale.x = -1.0 if e else 1.0
+	_swivel.scale.x = -1.0 if e else 1.0
+	_character.scale.x = -1.0 if e else 1.0
 	_bodies.clear()
+
+func _PlayAnim(anim_name : StringName) -> void:
+	if _anim.current_animation != anim_name:
+		_anim.play(anim_name)
 
 # ------------------------------------------------------------------------------
 # Public Methods
@@ -86,7 +96,6 @@ func hurt(amount : float) -> void:
 # Handler Methods
 # ------------------------------------------------------------------------------
 func _on_sword_attack(v : float) -> void:
-	_attacking = true
 	if _bodies.size() > 0:
 		for body in _bodies:
 			body.kill()
@@ -94,7 +103,6 @@ func _on_sword_attack(v : float) -> void:
 	_weapon.rotation = v
 
 func _on_sword_return(v : float) -> void:
-	_attacking = false
 	_weapon.rotation = v
 
 func _on_hit_zone_body_entered(body : Node2D) -> void:
@@ -105,6 +113,6 @@ func _on_hit_zone_body_entered(body : Node2D) -> void:
 			_bodies.append(body)
 
 func _on_hit_zone_body_exited(body : Node2D) -> void:
-	var idx = _bodies.find(body)
+	var idx : int = _bodies.find(body)
 	if idx >= 0:
 		_bodies.remove_at(idx)

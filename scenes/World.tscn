@@ -1,25 +1,28 @@
 [gd_scene load_steps=8 format=3 uid="uid://5gdx0owkxxo3"]
 
-[ext_resource type="TileSet" uid="uid://bq5radnxh5jll" path="res://assets/graphics/tileset.tres" id="1_tndpg"]
 [ext_resource type="Script" path="res://scenes/World.gd" id="1_ye53i"]
 [ext_resource type="PackedScene" uid="uid://8qu2xfbqea52" path="res://objects/player/Player.tscn" id="2_1abav"]
 [ext_resource type="Script" path="res://scripts/FollowCamera2D.gd" id="3_s75uj"]
-[ext_resource type="PackedScene" uid="uid://cohoadsdswypi" path="res://objects/ghost_spawner/GhostSpawner.tscn" id="4_5toh6"]
+[ext_resource type="PackedScene" uid="uid://c11ktyrq1bqb5" path="res://ui/UI.tscn" id="4_iyurl"]
 [ext_resource type="PackedScene" uid="uid://bp6sk87y31n36" path="res://ui/score/Score.tscn" id="5_36py3"]
 [ext_resource type="PackedScene" uid="uid://cnnuj3y4mkwgo" path="res://ui/hp/HP.tscn" id="7_l6b8o"]
+[ext_resource type="PackedScene" uid="uid://cs50h87nol2sb" path="res://ui/EffectLayer/EffectLayer.tscn" id="7_loi5l"]
 
 [node name="World" type="Node2D"]
+process_mode = 3
 script = ExtResource("1_ye53i")
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="."]
+process_mode = 3
+visible = false
 
-[node name="Score" parent="UI" instance=ExtResource("5_36py3")]
+[node name="Score" parent="HUD" instance=ExtResource("5_36py3")]
 offset_right = 90.0
 offset_bottom = 42.0
 
-[node name="HP" parent="UI" instance=ExtResource("7_l6b8o")]
+[node name="HP" parent="HUD" instance=ExtResource("7_l6b8o")]
 
-[node name="DeathScreen" type="CenterContainer" parent="UI"]
+[node name="DeathScreen" type="CenterContainer" parent="HUD"]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,50 +30,45 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="UI/DeathScreen"]
+[node name="Label" type="Label" parent="HUD/DeathScreen"]
+offset_left = 262.0
+offset_top = 154.0
+offset_right = 378.0
+offset_bottom = 206.0
 theme_override_colors/font_color = Color(1, 0.329412, 0, 1)
 text = "You Have Been
 GHOSTED"
 horizontal_alignment = 1
 
-[node name="TileMap" type="TileMap" parent="."]
-tile_set = ExtResource("1_tndpg")
-format = 2
-layer_0/tile_data = PackedInt32Array(-1, 0, 0, 65535, 1245184, 3, 0, 1245184, 1, 65536, 0, 0, 131071, 1179648, 1, 1, 0, 0, 65537, 1245184, 1, 65538, 1245184, 1, 131074, 0, 0, -65536, 0, 0, -131072, 1245184, 1, -65535, 1245184, 1, -65534, 1245184, 1, 2, 0, 0, -65537, 1245184, 1, -131071, 1245184, 1, -131070, 1179648, 4, 131073, 1245184, 1, 65534, 1245184, 2, -2, 1245184, 1, 65533, 1245184, 2, -3, 0, 0, 65539, 1245184, 1, 3, 1245184, 1, 65540, 1310720, 1, 4, 1179648, 3, 131068, 1310720, 1, 131067, 1245184, 1, 131066, 1245184, 1, 196602, 0, 0, 196601, 0, 0, 131065, 0, 0, 65529, 1245184, 1, 65530, 1245184, 1, -6, 0, 0, -5, 1245184, 1, 65528, 1179648, 1, 65531, 0, 0, 65532, 1179648, 3, -4, 0, 0, 196603, 1245184, 1, 131064, 1179648, 1, -65539, 1245184, 1, -131075, 0, 0, -131076, 1245184, 4, -196612, 1179648, 1, -131077, 1245184, 0, -65541, 1245184, 1, -65540, 0, 0, -65538, 0, 0, -131074, 1245184, 1, -196611, 1245184, 1, -196610, 0, 0, -196609, 1245184, 1, -131073, 0, 0, 196607, 1179648, 1, 196604, 1310720, 1, 262141, 1245184, 0, 196608, 1245184, 1, 262143, 1245184, 4, 262142, 1245184, 0, 196611, 0, 0, 196610, 1245184, 1, 196609, 0, 0, 196613, 1310720, 1, 196612, 0, 0, 262137, 0, 0, 262139, 1245184, 1, 262138, 1245184, 1, 262140, 1179648, 4, 262146, 1245184, 3, 262145, 1245184, 2, 262147, 1245184, 1, 327679, 1245184, 1, 327678, 0, 0, 262144, 1179648, 3, 262149, 1179648, 4, 262148, 1245184, 1, 262150, 1245184, 0, 327677, 0, 0, 327683, 0, 0, 327682, 1179648, 1, 327685, 1179648, 3, 327684, 1245184, 1, 327676, 1245184, 1, 327675, 0, 0, 262135, 1245184, 2, 262136, 1245184, 3, 327674, 0, 0, 327680, 1310720, 1, 393215, 1245184, 1, 393214, 1245184, 1, 327687, 1310720, 2, 327686, 1245184, 2, 327673, 1245184, 1, 393213, 0, 0, 393212, 0, 0, 393211, 1245184, 1, 393210, 0, 0, 393209, 0, 0, 393208, 1245184, 1, 458750, 1245184, 1, 458749, 0, 0, 393217, 1245184, 0, 393216, 1179648, 4, 458751, 1245184, 1, 393220, 1245184, 1, 393219, 0, 0, 393218, 1245184, 4, 393221, 1310720, 1, 393207, 1179648, 1, 458746, 0, 0, 458745, 1245184, 1, 458748, 1245184, 1, 458747, 1245184, 1, 327672, 1179648, 1, 458743, 1245184, 4, 458744, 0, 0, 524284, 1245184, 3, 524283, 1245184, 2, 524287, 1245184, 2, 524286, 1245184, 2, 524285, 1179648, 3, 458755, 1245184, 2, 458754, 1245184, 2, 458753, 1245184, 2, 458752, 1245184, 2, 458757, 1310720, 2, 458756, 1245184, 2, 524281, 1245184, 2, 524282, 1245184, 2, 524278, 1245184, 2, 524279, 1245184, 2, 524280, 1245184, 2, 524277, 1310720, 4, 131072, 0, 0, -65543, 1245184, 1, -65542, 0, 0, -65544, 1245184, 1, -65531, 1245184, 0, -65532, 1179648, 4, -65533, 1245184, 1, -131068, 1376256, 3, -196606, 1310720, 1, -131069, 1245184, 0, -196608, 1245184, 1, -196607, 1245184, 1, -262151, 0, 0, -262150, 1179648, 3, -262149, 1245184, 2, -262153, 1179648, 1, -262152, 0, 0, -327687, 1245184, 0, -327685, 1245184, 1, -327686, 1245184, 4, -327683, 0, 0, -327684, 1245184, 1, -393219, 1179648, 4, -393221, 1245184, 0, -393220, 1245184, 4, -393222, 1310720, 3, -327688, 1245184, 0, -262144, 0, 0, -262142, 1310720, 0, -262143, 1179648, 4, -196615, 0, 0, -196614, 1310720, 1, -131083, 1179648, 2, -131082, 1245184, 3, -196617, 1245184, 4, -196616, 1245184, 1, -65545, 1245184, 1, -131079, 0, 0, -327682, 1310720, 1, -262148, 1245184, 3, -262145, 1245184, 0, -262146, 1179648, 4, -262147, 1245184, 1, -327679, 1376256, 3, -327680, 1245184, 0, -131078, 1179648, 4, -7, 0, 0, -65546, 1179648, 1, -10, 1179648, 2, -8, 1245184, 3, -9, 1245184, 2, -131080, 0, 0, -131081, 1245184, 1, 196600, 1245184, 4, 131076, 1179648, 4, 131075, 1245184, 1, 131077, 1310720, 0, 196599, 1245184, 0, -393218, 1376256, 3, -196619, 1310720, 3, -196618, 1245184, 0, 458742, 1245184, 0, 458741, 1179648, 0, 262151, 1376256, 3, 5, 1245184, 2, -327689, 1179648, 0, 589820, 1179648, 1, 655356, 1179648, 1, 720892, 1179648, 1, 786428, 1179648, 1, 851964, 1179648, 1, 917500, 1179648, 1, 983036, 1310720, 4, 983037, 1245184, 2, 983038, 1245184, 2, 983039, 1245184, 2, 917504, 1245184, 2, 917505, 1245184, 2, 917506, 1245184, 2, 917507, 1376256, 4, 589821, 1310720, 1, 655357, 1310720, 1, 720893, 1310720, 1, 786429, 1310720, 1, 851965, 1310720, 1, 917501, 1179648, 4, 917502, 1245184, 0, 917503, 1245184, 0, 851968, 1245184, 0, 851969, 1245184, 0, 851970, 1245184, 0, 851971, 1376256, 3, -458755, 1310720, 1, -524291, 1310720, 1, -589827, 1310720, 1, -655363, 1310720, 1, -720899, 1310720, 1, -786435, 1310720, 1, -851971, 1179648, 3, -917507, 1245184, 0, -458756, 1179648, 1, -524292, 1179648, 1, -589828, 1179648, 1, -655364, 1179648, 1, -720900, 1179648, 1, -786436, 1179648, 1, -851972, 1179648, 1, -917508, 1179648, 0, -917500, 1310720, 2, -983036, 1310720, 0, -917501, 1245184, 2, -983037, 1245184, 0, -917502, 1245184, 2, -983038, 1245184, 0, -917503, 1245184, 2, -983039, 1245184, 0, -917504, 1245184, 2, -983040, 1245184, 0, -851969, 1245184, 2, -917505, 1245184, 0, -851970, 1245184, 2, -917506, 1245184, 0, 11, 1376256, 4, -65525, 1310720, 1, 10, 1245184, 2, -65526, 1245184, 4, 9, 1245184, 2, -65527, 1245184, 0, 8, 1245184, 2, -65528, 1245184, 0, 7, 1245184, 2, -65529, 1245184, 0, 6, 1245184, 2, -65530, 1245184, 0, -131061, 1310720, 1, -196597, 1310720, 1, -262133, 1310720, 1, -327669, 1310720, 0, -131062, 1179648, 1, -196598, 1179648, 1, -262134, 1179648, 1, -327670, 1179648, 0, 262134, 1245184, 2, 196598, 1245184, 0, 262133, 1245184, 2, 196597, 1245184, 0, 262132, 1245184, 2, 196596, 1245184, 0, 262131, 1245184, 2, 196595, 1179648, 4, 262130, 1179648, 2, 196594, 1179648, 1, 131059, 1310720, 1, 65523, 1310720, 1, -13, 1310720, 1, -65549, 1310720, 1, -131085, 1310720, 0, 131058, 1179648, 1, 65522, 1179648, 1, -14, 1179648, 1, -65550, 1179648, 1, -131086, 1310720, 3)
+[node name="UI" parent="." instance=ExtResource("4_iyurl")]
+initial_menu = &"MainMenu"
 
 [node name="Player" parent="." instance=ExtResource("2_1abav")]
+process_mode = 1
+visible = false
 
 [node name="FollowCamera2D" type="Camera2D" parent="."]
+process_mode = 1
+visible = false
 current = true
 script = ExtResource("3_s75uj")
 target_node_path = NodePath("../Player")
 
-[node name="GhostSpawner" parent="." instance=ExtResource("4_5toh6")]
-position = Vector2(61, -224)
-
-[node name="GhostSpawner2" parent="." instance=ExtResource("4_5toh6")]
-position = Vector2(176, -63)
-
-[node name="GhostSpawner3" parent="." instance=ExtResource("4_5toh6")]
-position = Vector2(38, 224)
-
-[node name="GhostSpawner4" parent="." instance=ExtResource("4_5toh6")]
-position = Vector2(-207, -23)
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="BGLayer" type="CanvasLayer" parent="."]
 layer = -1
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+[node name="ColorRect" type="ColorRect" parent="BGLayer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 color = Color(0, 0, 0, 1)
 
-[connection signal="hp_changed" from="Player" to="UI/HP" method="update_hp"]
+[node name="EffectLayer" parent="." instance=ExtResource("7_loi5l")]
+
+[connection signal="game_start_requested" from="UI" to="." method="_on_game_start_requested"]
+[connection signal="quit_requested" from="UI" to="." method="_on_quit_requested"]
+[connection signal="hp_changed" from="Player" to="HUD/HP" method="update_hp"]
 [connection signal="killed" from="Player" to="." method="_on_player_killed"]
-[connection signal="ghost_killed" from="GhostSpawner" to="." method="_on_ghost_killed"]
-[connection signal="ghost_killed" from="GhostSpawner2" to="." method="_on_ghost_killed"]
-[connection signal="ghost_killed" from="GhostSpawner3" to="." method="_on_ghost_killed"]
-[connection signal="ghost_killed" from="GhostSpawner4" to="." method="_on_ghost_killed"]

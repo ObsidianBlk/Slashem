@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://cs50h87nol2sb"]
+
+[ext_resource type="Script" path="res://ui/EffectLayer/EffectLayer.gd" id="1_goc6s"]
+[ext_resource type="Shader" path="res://shader/transistor.gdshader" id="1_jq5qy"]
+[ext_resource type="Texture2D" uid="uid://c7g78qvxogtf3" path="res://assets/graphics/masks/MaskA.png" id="2_2htes"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m5awb"]
+shader = ExtResource("1_jq5qy")
+shader_parameter/progress = 0.0
+shader_parameter/smoothness = 0.1
+shader_parameter/mask = ExtResource("2_2htes")
+
+[node name="EffectLayer" type="CanvasLayer"]
+process_mode = 3
+layer = 2
+script = ExtResource("1_goc6s")
+
+[node name="Transition" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_m5awb")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

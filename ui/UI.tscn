@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://c11ktyrq1bqb5"]
+
+[ext_resource type="PackedScene" uid="uid://dtreko6mg6eyi" path="res://ui/MainMenu/MainMenu.tscn" id="1_jnsgx"]
+[ext_resource type="Script" path="res://ui/UI.gd" id="1_okro6"]
+
+[node name="UI" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_okro6")
+
+[node name="MainMenu" parent="." instance=ExtResource("1_jnsgx")]
+
+[connection signal="game_start_requested" from="MainMenu" to="." method="_on_main_menu_game_start_requested"]
+[connection signal="options_requested" from="MainMenu" to="." method="show_menu" binds= [&"Options"]]
+[connection signal="quit_requested" from="MainMenu" to="." method="_on_main_menu_quit_requested"]
+[connection signal="stats_requested" from="MainMenu" to="." method="show_menu" binds= [&"Statistics"]]

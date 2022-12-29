@@ -57,6 +57,7 @@ func _PrepareGame() -> void:
 			get_tree().paused = false
 		_ui.visible = false
 		_hud.visible = true
+		_player.revive()
 		_player.visible = true
 		_LoadLevel(DEFAULT_LEVEL_PATH)
 		_effects.fade_in(TRANSITION_TIME, finalize)

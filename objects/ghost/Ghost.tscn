@@ -80,7 +80,7 @@ shape = SubResource("CapsuleShape2D_obo3g")
 
 [node name="NAgent" type="NavigationAgent2D" parent="."]
 path_desired_distance = 8.0
-target_desired_distance = 16.0
+target_desired_distance = 12.0
 
 [node name="AttackZone" type="Area2D" parent="."]
 position = Vector2(0, -7)

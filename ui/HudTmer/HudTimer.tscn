@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=3 uid="uid://dccmd0necmupw"]
+
+[ext_resource type="Script" path="res://ui/HudTmer/HudTimer.gd" id="1_wdhwh"]
+
+[node name="HudTimer" type="MarginContainer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+script = ExtResource("1_wdhwh")
+
+[node name="Layout" type="HBoxContainer" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 245.0
+offset_bottom = 34.0
+
+[node name="Label" type="Label" parent="Layout"]
+offset_right = 105.0
+offset_bottom = 26.0
+text = "Count Down: "
+
+[node name="Control" type="CenterContainer" parent="Layout"]
+offset_left = 109.0
+offset_right = 237.0
+offset_bottom = 26.0
+
+[node name="ProgressBar" type="ProgressBar" parent="Layout/Control"]
+custom_minimum_size = Vector2(128, 16)
+offset_top = 5.0
+offset_right = 128.0
+offset_bottom = 21.0
+size_flags_vertical = 4
+show_percentage = false
+
+[node name="Time" type="Label" parent="Layout/Control"]
+offset_left = 43.0
+offset_right = 84.0
+offset_bottom = 26.0
+theme_override_colors/font_color = Color(0.917647, 0.831373, 0, 1)
+text = "00:00"
+vertical_alignment = 1

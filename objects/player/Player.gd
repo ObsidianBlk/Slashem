@@ -6,7 +6,6 @@ extends CharacterBody2D
 # signals
 # ------------------------------------------------------------------------------
 signal hp_changed(hp, max_hp)
-signal killed()
 
 # ------------------------------------------------------------------------------
 # Constants
@@ -167,7 +166,13 @@ func hurt(amount : float) -> void:
 	_hp = max(0.0, min(MAX_HP, _hp - amount))
 	hp_changed.emit(_hp, MAX_HP)
 	if _hp <= 0.0:
-		killed.emit()
+		Statistics.player_died()
+
+func revive() -> void:
+	if Engine.is_editor_hint():
+		return
+	_hp = MAX_HP
+	hp_changed.emit(_hp, MAX_HP)
 
 # ------------------------------------------------------------------------------
 # Handler Methods

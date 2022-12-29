@@ -60,7 +60,7 @@ func _physics_process(delta : float) -> void:
 		if target.global_position != _target_last_pos:
 			var angle : float = deg_to_rad(randf_range(0.0, 360.0))
 			_target_last_pos = target.global_position
-			agent.target_location = target.global_position + (Vector2.UP * 8.0).rotated(angle)
+			agent.target_location = target.global_position + (Vector2.UP * 6.0).rotated(angle)
 	else:
 		_target_attackable = false
 	
@@ -103,6 +103,7 @@ func kill() -> void:
 	
 	set_physics_process(false)
 	killed.emit()
+	Statistics.mob_killed()
 	anim.play("death")
 	await anim.animation_finished
 	queue_free()

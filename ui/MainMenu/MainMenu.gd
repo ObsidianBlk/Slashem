@@ -4,10 +4,14 @@ extends Control
 # ------------------------------------------------------------------------------
 # Signals
 # ------------------------------------------------------------------------------
-signal game_start_requested()
-signal options_requested()
-signal stats_requested()
-signal quit_requested()
+signal menu_change_requested(menu_name)
+signal request_sent(info)
+
+# ------------------------------------------------------------------------------
+# Export Variables
+# ------------------------------------------------------------------------------
+@export var options_menu_name : StringName = &""
+@export var stats_menu_name : StringName = &""
 
 # ------------------------------------------------------------------------------
 # Onready Variables
@@ -52,13 +56,17 @@ func _on_button_focused(btn : Button) -> void:
 	_pointer.rotation = _pointer.global_position.angle_to_point(targ)
 
 func _on_start_pressed():
-	game_start_requested.emit()
+	request_sent.emit({
+		&"request": &"start_game"
+	})
 
 func _on_options_pressed():
-	options_requested.emit()
+	menu_change_requested.emit(options_menu_name)
 
 func _on_stats_pressed():
-	stats_requested.emit()
+	menu_change_requested.emit(stats_menu_name)
 
 func _on_quit_pressed():
-	quit_requested.emit()
+	request_sent.emit({
+		&"request": &"quit_game"
+	})

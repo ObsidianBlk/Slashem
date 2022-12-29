@@ -3,7 +3,10 @@ extends Node
 # ------------------------------------------------------------------------------
 # Signals
 # ------------------------------------------------------------------------------
-signal run_completed()
+signal stats_loaded(info)
+signal run_completed(player_died)
+signal run_kills_changed(amount)
+signal run_time_changed(remaining, total)
 
 # ------------------------------------------------------------------------------
 # Constants
@@ -24,10 +27,18 @@ var _run_timer : SceneTreeTimer = null
 var _active_run : Dictionary = {}
 
 # ------------------------------------------------------------------------------
+# Override Methods
+# ------------------------------------------------------------------------------
+func _physics_process(_delta : float) -> void:
+	if _run_timer != null and not _active_run.is_empty():
+		run_time_changed.emit(_run_timer.time_left, _active_run.time_run)
+
+# ------------------------------------------------------------------------------
 # Private Methods
 # ------------------------------------------------------------------------------
 func _FinalizeRun() -> void:
 	if not _active_run.is_empty():
+		_kills += _active_run.kills
 		var search_method : Callable = func(a, b):
 			var a_success : bool = a.time_run <= a.time_survived
 			var b_success : bool = b.time_run <= b.time_survived
@@ -100,6 +111,7 @@ func reset_statistics() -> void:
 	_deaths = 0
 	_kills = 0
 	_best_runs.clear()
+	stats_loaded.emit(get_stats())
 
 func save_to_config(cfg : ConfigFile) -> void:
 	cfg.set_value(CONFIG_SECTION, "runs", _runs)
@@ -120,7 +132,8 @@ func load_from_config(cfg : ConfigFile) -> void:
 		return
 	if not _LoadValFromConfig(cfg, "deaths", TYPE_INT):
 		return
-	_LoadValFromConfig(cfg, "kills", TYPE_INT)
+	if _LoadValFromConfig(cfg, "kills", TYPE_INT):
+		stats_loaded.emit(get_stats())
 
 
 func start_run(duration : float) -> void:
@@ -131,6 +144,7 @@ func start_run(duration : float) -> void:
 			"time_survived": 0.0,
 			"kills": 0
 		}
+		run_kills_changed.emit(0)
 		_run_timer = get_tree().create_timer(duration)
 		_run_timer.timeout.connect(_on_run_timedout)
 
@@ -147,20 +161,40 @@ func player_died() -> void:
 			_run_timer.timeout.disconnect(_on_run_timedout)
 			_active_run.time_survived = _active_run.time_run - _run_timer.time_left
 			_run_timer.free()
+			_run_timer = null
 		_deaths += 1
 		_FinalizeRun()
+		run_completed.emit(true)
 
 func mob_killed() -> void:
 	if not _active_run.is_empty():
 		_active_run.kills += 1
-		_kills += 1
+		#_kills += 1
+		run_kills_changed.emit(_active_run.kills)
+
+func get_stats() -> Dictionary:
+	var bests : Array = []
+	for item in _best_runs:
+		bests.append({
+			"time_run": item.time_run,
+			"time_survived": item.time_survived,
+			"kills": item.kills
+		})
+	return {
+		"runs": _runs,
+		"abandoned": _abandoned,
+		"deaths": _deaths,
+		"kills": _kills,
+		"bests": bests
+	}
 
 # ------------------------------------------------------------------------------
 # Handler Methods
 # ------------------------------------------------------------------------------
 func _on_run_timedout() -> void:
+	_run_timer = null
 	_active_run.time_survived = _active_run.time_run
 	_FinalizeRun()
-	run_completed.emit()
+	run_completed.emit(false)
 
 

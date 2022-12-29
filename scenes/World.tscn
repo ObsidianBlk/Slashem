@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://5gdx0owkxxo3"]
+[gd_scene load_steps=9 format=3 uid="uid://5gdx0owkxxo3"]
 
 [ext_resource type="Script" path="res://scenes/World.gd" id="1_ye53i"]
 [ext_resource type="PackedScene" uid="uid://8qu2xfbqea52" path="res://objects/player/Player.tscn" id="2_1abav"]
 [ext_resource type="Script" path="res://scripts/FollowCamera2D.gd" id="3_s75uj"]
 [ext_resource type="PackedScene" uid="uid://c11ktyrq1bqb5" path="res://ui/UI.tscn" id="4_iyurl"]
+[ext_resource type="PackedScene" uid="uid://dccmd0necmupw" path="res://ui/HudTmer/HudTimer.tscn" id="4_u1e2y"]
 [ext_resource type="PackedScene" uid="uid://bp6sk87y31n36" path="res://ui/score/Score.tscn" id="5_36py3"]
 [ext_resource type="PackedScene" uid="uid://cnnuj3y4mkwgo" path="res://ui/hp/HP.tscn" id="7_l6b8o"]
 [ext_resource type="PackedScene" uid="uid://cs50h87nol2sb" path="res://ui/EffectLayer/EffectLayer.tscn" id="7_loi5l"]
@@ -14,7 +15,6 @@ script = ExtResource("1_ye53i")
 
 [node name="HUD" type="CanvasLayer" parent="."]
 process_mode = 3
-visible = false
 
 [node name="Score" parent="HUD" instance=ExtResource("5_36py3")]
 offset_right = 90.0
@@ -31,14 +31,13 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Label" type="Label" parent="HUD/DeathScreen"]
-offset_left = 262.0
-offset_top = 154.0
-offset_right = 378.0
-offset_bottom = 206.0
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.329412, 0, 1)
 text = "You Have Been
-GHOSTED"
+MOBBED"
 horizontal_alignment = 1
+
+[node name="HudTimer" parent="HUD" instance=ExtResource("4_u1e2y")]
 
 [node name="UI" parent="." instance=ExtResource("4_iyurl")]
 initial_menu = &"MainMenu"
@@ -67,8 +66,7 @@ mouse_filter = 1
 color = Color(0, 0, 0, 1)
 
 [node name="EffectLayer" parent="." instance=ExtResource("7_loi5l")]
+transition_color = Color(0.0941176, 0.117647, 0.141176, 1)
 
-[connection signal="game_start_requested" from="UI" to="." method="_on_game_start_requested"]
-[connection signal="quit_requested" from="UI" to="." method="_on_quit_requested"]
+[connection signal="request_sent" from="UI" to="." method="_on_ui_request_sent"]
 [connection signal="hp_changed" from="Player" to="HUD/HP" method="update_hp"]
-[connection signal="killed" from="Player" to="." method="_on_player_killed"]

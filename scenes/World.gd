@@ -20,11 +20,7 @@ var _game_active : bool = false
 # ------------------------------------------------------------------------------
 @onready var _ui : CanvasLayer = $UI
 @onready var _hud : CanvasLayer = $HUD
-@onready var _score : Control = $HUD/Score
-@onready var _death_screen : Control = $HUD/DeathScreen
-
 @onready var _effects : CanvasLayer = $EffectLayer
-
 @onready var _player : Node2D = $Player
 
 # ------------------------------------------------------------------------------
@@ -55,11 +51,25 @@ func _UpdatePlayerLocation() -> void:
 
 func _PrepareGame() -> void:
 	if _level == null:
+		var finalize : Callable = func():
+			Statistics.start_run(90.0)
+			_game_active = false
+			get_tree().paused = false
 		_ui.visible = false
 		_hud.visible = true
 		_player.visible = true
 		_LoadLevel(DEFAULT_LEVEL_PATH)
-		_effects.fade_in(TRANSITION_TIME, func(): get_tree().paused = false)
+		_effects.fade_in(TRANSITION_TIME, finalize)
+
+func _ClearOutGame() -> void:
+	remove_child(_level)
+	_level.queue_free()
+	_level = null
+	_hud.visible = false
+	_ui.visible = true
+	_ui.show_menu(&"StatsMenu")
+	_player.visible = false
+	_effects.fade_in(TRANSITION_TIME)
 
 func _UpdateConfig() -> void:
 	Statistics.save_to_config(config)
@@ -70,22 +80,19 @@ func _UpdateConfig() -> void:
 # ------------------------------------------------------------------------------
 func _on_ghost_killed() -> void:
 	Statistics.mob_killed()
-	_score.add_score(1)
 
-func _on_player_killed():
-	Statistics.player_died()
-	_death_screen.visible = true
-	_UpdateConfig()
-
-func _on_game_completed() -> void:
+func _on_game_completed(_player_died : bool) -> void:
 	_UpdateConfig()
 	get_tree().paused = true
+	_effects.fade_out(TRANSITION_TIME, _ClearOutGame)
 
-func _on_game_start_requested():
-	if not _game_active:
-		_game_active = true
-		_effects.fade_out(TRANSITION_TIME, _PrepareGame)
-
-func _on_quit_requested():
-	_UpdateConfig()
-	get_tree().quit()
+func _on_ui_request_sent(info : Dictionary):
+	if &"request" in info:
+		match info[&"request"]:
+			&"start_game":
+				if not _game_active:
+					_game_active = true
+					_effects.fade_out(TRANSITION_TIME, _PrepareGame)
+			&"quit_game":
+				_UpdateConfig()
+				get_tree().quit()

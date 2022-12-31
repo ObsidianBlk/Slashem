@@ -33,6 +33,7 @@ var _target_attackable : bool = false
 @onready var sprite : Sprite2D = $Sprite2D
 @onready var anim : AnimationPlayer = $Anim
 @onready var agent : NavigationAgent2D = $NAgent
+@onready var sfx : Node2D = $SFX
 
 
 # ------------------------------------------------------------------------------
@@ -105,6 +106,7 @@ func kill() -> void:
 	killed.emit()
 	Statistics.mob_killed()
 	anim.play("death")
+	sfx.play_group(&"death")
 	await anim.animation_finished
 	queue_free()
 

@@ -1,8 +1,16 @@
-[gd_scene load_steps=18 format=3 uid="uid://8qu2xfbqea52"]
+[gd_scene load_steps=26 format=3 uid="uid://8qu2xfbqea52"]
 
 [ext_resource type="Script" path="res://objects/player/Player.gd" id="1_3118y"]
 [ext_resource type="Texture2D" uid="uid://ch76m21gtrq87" path="res://assets/graphics/monochrome-transparent_packed.png" id="1_c1fmy"]
 [ext_resource type="Shader" path="res://shader/recolor.gdshader" id="3_2hex0"]
+[ext_resource type="PackedScene" uid="uid://c4o2o417t2wrq" path="res://objects/SFX/SFX.tscn" id="4_3k6ig"]
+[ext_resource type="AudioStream" uid="uid://b7k72x0du4gpp" path="res://assets/audio/player/step_001.wav" id="5_tj4cm"]
+[ext_resource type="AudioStream" uid="uid://cq8i8fb78ggmw" path="res://assets/audio/player/step_002.wav" id="6_laijq"]
+[ext_resource type="AudioStream" uid="uid://cqp2s47326mw5" path="res://assets/audio/player/step_003.wav" id="7_d25pu"]
+[ext_resource type="AudioStream" uid="uid://d1grmfu8akthm" path="res://assets/audio/player/swish_001.wav" id="8_6faa5"]
+[ext_resource type="AudioStream" uid="uid://5hu3ve3cokn4" path="res://assets/audio/player/swish_002.wav" id="9_c0nxp"]
+[ext_resource type="AudioStream" uid="uid://c3s408i7npktv" path="res://assets/audio/player/swish_003.wav" id="10_sbcsa"]
+[ext_resource type="AudioStream" uid="uid://cb3spkesr2dwr" path="res://assets/audio/player/impact.wav" id="11_ij1bu"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tdcd6"]
 radius = 8.0
@@ -762,6 +770,23 @@ tracks/10/keys = {
 "update": 0,
 "values": [Vector2(1, 1), Vector2(1, 1.1)]
 }
+tracks/11/type = "method"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("..")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0.3, 0.8),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [&"step", true],
+"method": &"_PlayAudio"
+}, {
+"args": [&"step", true],
+"method": &"_PlayAudio"
+}]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1gbt7"]
 _data = {
@@ -864,6 +889,11 @@ autoplay = "idle"
 libraries = {
 "": SubResource("AnimationLibrary_1gbt7")
 }
+
+[node name="SFX" parent="." instance=ExtResource("4_3k6ig")]
+sample_names = [&"step001", &"step002", &"step003", &"swish001", &"swish002", &"swish003", &"impact"]
+sample_streams = [ExtResource("5_tj4cm"), ExtResource("6_laijq"), ExtResource("7_d25pu"), ExtResource("8_6faa5"), ExtResource("9_c0nxp"), ExtResource("10_sbcsa"), ExtResource("11_ij1bu")]
+sample_groups = ["step,step001,step002,step003", "swish,swish001,swish002,swish003"]
 
 [connection signal="body_entered" from="Swivel/HitZone" to="." method="_on_hit_zone_body_entered"]
 [connection signal="body_exited" from="Swivel/HitZone" to="." method="_on_hit_zone_body_exited"]

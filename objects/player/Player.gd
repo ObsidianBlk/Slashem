@@ -29,6 +29,7 @@ const MAX_HP : float = 100.0
 var _dir : Vector2 = Vector2.ZERO
 var _bodies : Array = []
 var _attacking : bool = false
+var _swish_audio : bool = false
 var _hp : float = MAX_HP
 
 # ------------------------------------------------------------------------------
@@ -45,6 +46,8 @@ var _hp : float = MAX_HP
 @onready var _arm_r : Sprite2D = $Character/Upper/ArmR
 @onready var _leg_l : Sprite2D = $Character/LegL
 @onready var _leg_r : Sprite2D = $Character/LegR
+
+@onready var _sfx : Node2D = $SFX
 
 # ------------------------------------------------------------------------------
 # Setters
@@ -139,6 +142,7 @@ func _SwingSword() -> void:
 	
 	_attacking = true
 	var tween : Tween = create_tween()
+	_swish_audio = false
 	tween.tween_method(_on_sword_attack, 0.0, SWORD_ARC, 0.1)
 	tween.tween_method(_on_sword_return, SWORD_ARC, 0.0, 0.25)
 	await tween.finished
@@ -155,6 +159,12 @@ func _Flip(e : bool = true) -> void:
 func _PlayAnim(anim_name : StringName) -> void:
 	if _anim.current_animation != anim_name:
 		_anim.play(anim_name)
+
+func _PlayAudio(audio_name : StringName, is_group : bool = false) -> void:
+	if is_group:
+		_sfx.play_group(audio_name)
+	else:
+		_sfx.play(audio_name)
 
 # ------------------------------------------------------------------------------
 # Public Methods
@@ -181,7 +191,13 @@ func _on_sword_attack(v : float) -> void:
 	if _bodies.size() > 0:
 		for body in _bodies:
 			body.kill()
+			if _swish_audio == false:
+				_sfx.play(&"impact", true, 1)
+				_swish_audio = true
 		_bodies.clear()
+	if _swish_audio == false:
+		_sfx.play_group(&"swish", true, 2)
+		_swish_audio = true
 	_weapon.rotation = v
 
 func _on_sword_return(v : float) -> void:
@@ -193,6 +209,8 @@ func _on_hit_zone_body_entered(body : Node2D) -> void:
 	
 	if body.has_method("kill"):
 		if _attacking:
+			if not _sfx.is_stream_playing(&"impact"):
+				_sfx.play(&"impact", true, 1)
 			body.kill()
 		elif _bodies.find(body) < 0:
 			_bodies.append(body)

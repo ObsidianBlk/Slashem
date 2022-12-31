@@ -1,0 +1,18 @@
+player/step_001.wav
+player/step_002.wav
+player/step_003.wav
+Original Source: https://freesound.org/people/sturmankin/sounds/273103/
+Author: sturmankin
+License: CC0
+
+player/swish_001.wav
+player/swish_002.wav
+player/swish_003.wav
+Original Source: https://freesound.org/people/J.Zazvurek/sounds/153235/
+Author: J.Zazvurek
+License: CC4 (https://creativecommons.org/licenses/by/4.0/)
+
+player/impact.wav
+Original Source: https://freesound.org/people/Rob_Marion/sounds/542041/
+Author: Rob_Marion
+License: CC0

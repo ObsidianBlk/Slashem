@@ -88,13 +88,18 @@ func stop() -> void:
 	_audio2.stop()
 	_audio2.stream = null
 
-func play(stream_name : StringName, force : bool = false, id : int = 0) -> void:
+func play(stream_name : StringName, force : bool = false, id : int = -1) -> void:
 	var idx : int = sample_names.find(stream_name)
 	if not (idx >= 0 and idx < sample_streams.size()):
 		return
-	var audio : AudioStreamPlayer2D = _GetAvailableStream()
-	if audio == null and force:
+	
+	var audio : AudioStreamPlayer2D = null
+	if force:
+		if not (id >= 0 and id < 2):
+			id = randi_range(0, 1)
 		audio = _audio1 if id == 0 else _audio2
+	else:
+		audio = _GetAvailableStream()
 	if audio != null:
 		audio.stop()
 		audio.stream = sample_streams[idx]
@@ -106,7 +111,7 @@ func is_stream_playing(stream_name : StringName) -> bool:
 			return true
 	return false
 
-func play_group(group_name : StringName, force : bool = false, id : int = 0) -> void:
+func play_group(group_name : StringName, force : bool = false, id : int = -1) -> void:
 	if group_name in _groups:
 		var idx : int = randi_range(0, _groups[group_name].size() - 1)
 		play(_groups[group_name][idx], force, id)

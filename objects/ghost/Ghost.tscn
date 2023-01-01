@@ -8,18 +8,18 @@
 [ext_resource type="AudioStream" uid="uid://bnujl4ty8uo8y" path="res://assets/audio/ghost/death_002.wav" id="6_olojn"]
 [ext_resource type="AudioStream" uid="uid://ndpxr7qdsape" path="res://assets/audio/ghost/death_003.wav" id="7_rhb1e"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8cxv4"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s5stk"]
 radius = 3.0
 height = 8.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_7idyn"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_7klqc"]
 radius = 16.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6icv0"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qou55"]
 shader = ExtResource("2_576df")
 shader_parameter/color = Color(0.690196, 0.768627, 0.870588, 1)
 
-[sub_resource type="Animation" id="Animation_j4lij"]
+[sub_resource type="Animation" id="Animation_yo85d"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -34,7 +34,7 @@ tracks/0/keys = {
 "values": [Rect2(432, 96, 16, 16)]
 }
 
-[sub_resource type="Animation" id="Animation_ejy6a"]
+[sub_resource type="Animation" id="Animation_g5814"]
 resource_name = "death"
 length = 0.5
 tracks/0/type = "value"
@@ -50,7 +50,7 @@ tracks/0/keys = {
 "values": [Rect2(432, 96, 16, 16), Rect2(64, 0, 16, 16), Rect2(48, 0, 16, 16), Rect2(32, 0, 16, 16), Rect2(16, 0, 16, 16), Rect2(0, 0, 16, 16)]
 }
 
-[sub_resource type="Animation" id="Animation_p786u"]
+[sub_resource type="Animation" id="Animation_cbovj"]
 resource_name = "idle"
 length = 0.1
 tracks/0/type = "value"
@@ -66,11 +66,11 @@ tracks/0/keys = {
 "values": [Rect2(432, 96, 16, 16)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_h7kmd"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_c2xrn"]
 _data = {
-"RESET": SubResource("Animation_j4lij"),
-"death": SubResource("Animation_ejy6a"),
-"idle": SubResource("Animation_p786u")
+"RESET": SubResource("Animation_yo85d"),
+"death": SubResource("Animation_g5814"),
+"idle": SubResource("Animation_cbovj")
 }
 
 [node name="Ghost" type="CharacterBody2D" groups=["ghost", "mobling"]]
@@ -80,7 +80,7 @@ script = ExtResource("1_3vcmb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3)
-shape = SubResource("CapsuleShape2D_8cxv4")
+shape = SubResource("CapsuleShape2D_s5stk")
 
 [node name="NAgent" type="NavigationAgent2D" parent="."]
 path_desired_distance = 8.0
@@ -92,10 +92,10 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackZone"]
-shape = SubResource("CircleShape2D_7idyn")
+shape = SubResource("CircleShape2D_7klqc")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_6icv0")
+material = SubResource("ShaderMaterial_qou55")
 texture = ExtResource("1_huath")
 centered = false
 offset = Vector2(-8, -15)
@@ -105,7 +105,7 @@ region_rect = Rect2(432, 96, 16, 16)
 [node name="Anim" type="AnimationPlayer" parent="."]
 autoplay = "idle"
 libraries = {
-"": SubResource("AnimationLibrary_h7kmd")
+"": SubResource("AnimationLibrary_c2xrn")
 }
 
 [node name="SFX" parent="." instance=ExtResource("4_sv8s4")]

@@ -6,6 +6,7 @@ extends CharacterBody2D
 # signals
 # ------------------------------------------------------------------------------
 signal hp_changed(hp, max_hp)
+signal shake_requested(dur, amp, freq, pri)
 
 # ------------------------------------------------------------------------------
 # Constants
@@ -31,6 +32,9 @@ var _bodies : Array = []
 var _attacking : bool = false
 var _swish_audio : bool = false
 var _hp : float = MAX_HP
+
+var _drag_time : SceneTreeTimer = null
+var _drag_mult : float = 1.0
 
 # ------------------------------------------------------------------------------
 # Onready Variables
@@ -103,11 +107,12 @@ func _physics_process(_delta : float) -> void:
 	
 	if _dir.x != 0.0 or _dir.y != 0.0:
 		_PlayAnim("run")
-		if _dir.x != 0.0:
-			_Flip(_dir.x < 0.0)
+		if not _attacking:
+			if _dir.x != 0.0:
+				_Flip(_dir.x < 0.0)
 	else:
 		_PlayAnim("idle")
-	velocity = _dir * SPEED
+	velocity = _dir * SPEED * (0.5 if _attacking else 1.0) * _drag_mult
 	move_and_slide()
 
 
@@ -156,6 +161,11 @@ func _Flip(e : bool = true) -> void:
 		_character.scale.x = nscale
 		_bodies.clear()
 
+func _Impact() -> void:
+	if not _sfx.is_stream_playing(&"impact"):
+		_sfx.play(&"impact", true, 1)
+		shake_requested.emit(0.5, 3.0, 16.0, 0)
+
 func _PlayAnim(anim_name : StringName) -> void:
 	if _anim.current_animation != anim_name:
 		_anim.play(anim_name)
@@ -169,14 +179,22 @@ func _PlayAudio(audio_name : StringName, is_group : bool = false) -> void:
 # ------------------------------------------------------------------------------
 # Public Methods
 # ------------------------------------------------------------------------------
-func hurt(amount : float) -> void:
+func hurt(amount : float, drag : float = 0.0, dur : float = 0.0) -> void:
 	if Engine.is_editor_hint():
 		return
+	
+	drag = max(0.0, min(1.0, drag))
 	
 	_hp = max(0.0, min(MAX_HP, _hp - amount))
 	hp_changed.emit(_hp, MAX_HP)
 	if _hp <= 0.0:
 		Statistics.player_died()
+	elif drag > 0.0 and dur > 0.0:
+		_drag_mult = 1.0 - drag
+		if _drag_time != null:
+			_drag_time.timeout.disconnect(_on_drag_timeout)
+		_drag_time = get_tree().create_timer(dur)
+		_drag_time.timeout.connect(_on_drag_timeout)
 
 func revive() -> void:
 	if Engine.is_editor_hint():
@@ -190,10 +208,11 @@ func revive() -> void:
 func _on_sword_attack(v : float) -> void:
 	if _bodies.size() > 0:
 		for body in _bodies:
-			body.kill()
-			if _swish_audio == false:
-				_sfx.play(&"impact", true, 1)
-				_swish_audio = true
+			if body.can_kill():
+				body.kill()
+				if _swish_audio == false:
+					_Impact()
+					_swish_audio = true
 		_bodies.clear()
 	if _swish_audio == false:
 		_sfx.play_group(&"swish", true, 2)
@@ -203,14 +222,17 @@ func _on_sword_attack(v : float) -> void:
 func _on_sword_return(v : float) -> void:
 	_weapon.rotation = v
 
+func _on_drag_timeout() -> void:
+	_drag_mult = 1.0
+	_drag_time = null
+
 func _on_hit_zone_body_entered(body : Node2D) -> void:
 	if Engine.is_editor_hint():
 		return
 	
 	if body.has_method("kill"):
-		if _attacking:
-			if not _sfx.is_stream_playing(&"impact"):
-				_sfx.play(&"impact", true, 1)
+		if _attacking and body.can_kill():
+			_Impact()
 			body.kill()
 		elif _bodies.find(body) < 0:
 			_bodies.append(body)

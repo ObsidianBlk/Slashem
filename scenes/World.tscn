@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://5gdx0owkxxo3"]
+[gd_scene load_steps=10 format=3 uid="uid://5gdx0owkxxo3"]
 
 [ext_resource type="Script" path="res://scenes/World.gd" id="1_ye53i"]
 [ext_resource type="PackedScene" uid="uid://8qu2xfbqea52" path="res://objects/player/Player.tscn" id="2_1abav"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bp6sk87y31n36" path="res://ui/score/Score.tscn" id="5_36py3"]
 [ext_resource type="PackedScene" uid="uid://cnnuj3y4mkwgo" path="res://ui/hp/HP.tscn" id="7_l6b8o"]
 [ext_resource type="PackedScene" uid="uid://cs50h87nol2sb" path="res://ui/EffectLayer/EffectLayer.tscn" id="7_loi5l"]
+[ext_resource type="Script" path="res://scripts/ScreenShake.gd" id="8_wb5y0"]
 
 [node name="World" type="Node2D"]
 process_mode = 3
@@ -31,6 +32,10 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Label" type="Label" parent="HUD/DeathScreen"]
+offset_left = 262.0
+offset_top = 154.0
+offset_right = 378.0
+offset_bottom = 206.0
 theme_override_colors/font_color = Color(1, 0.329412, 0, 1)
 text = "You Have Been
 MOBBED"
@@ -52,6 +57,9 @@ current = true
 script = ExtResource("3_s75uj")
 target_node_path = NodePath("../Player")
 
+[node name="ScreenShake" type="Node" parent="FollowCamera2D"]
+script = ExtResource("8_wb5y0")
+
 [node name="BGLayer" type="CanvasLayer" parent="."]
 layer = -1
 
@@ -69,3 +77,4 @@ transition_color = Color(0.0941176, 0.117647, 0.141176, 1)
 
 [connection signal="request_sent" from="UI" to="." method="_on_ui_request_sent"]
 [connection signal="hp_changed" from="Player" to="HUD/HP" method="update_hp"]
+[connection signal="shake_requested" from="Player" to="FollowCamera2D/ScreenShake" method="shake"]

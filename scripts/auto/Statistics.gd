@@ -152,7 +152,7 @@ func abandon_run() -> void:
 	if not _active_run.is_empty():
 		if _run_timer != null:
 			_run_timer.timeout.disconnect(_on_run_timedout)
-			_run_timer.free()
+			_run_timer = null
 		_abandoned += 1
 
 func player_died() -> void:
@@ -160,7 +160,6 @@ func player_died() -> void:
 		if _run_timer != null:
 			_run_timer.timeout.disconnect(_on_run_timedout)
 			_active_run.time_survived = _active_run.time_run - _run_timer.time_left
-			_run_timer.free()
 			_run_timer = null
 		_deaths += 1
 		_FinalizeRun()

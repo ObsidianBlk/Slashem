@@ -13,9 +13,15 @@ _global_script_classes=[{
 "class": &"FollowCamera2D",
 "language": &"GDScript",
 "path": "res://scripts/FollowCamera2D.gd"
+}, {
+"base": "Node",
+"class": &"ScreenShake",
+"language": &"GDScript",
+"path": "res://scripts/ScreenShake.gd"
 }]
 _global_script_class_icons={
-"FollowCamera2D": ""
+"FollowCamera2D": "",
+"ScreenShake": ""
 }
 
 [application]

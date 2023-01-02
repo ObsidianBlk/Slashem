@@ -34,6 +34,7 @@ const DIED_TITLE : StringName = &"died"
 @onready var _abandoned_value : Label = $Layout/Info/LooseInfo/Abandoned/Value
 @onready var _deaths_value : Label = $Layout/Info/LooseInfo/Deaths/Value
 @onready var _kills_value : Label = $Layout/Info/LooseInfo/Kills/Value
+@onready var _kpr_value : Label = $Layout/Info/LooseInfo/AvgKPR/Value
 @onready var _kdr_value : Label = $Layout/Info/LooseInfo/KDR/Value
 
 # ------------------------------------------------------------------------------
@@ -64,6 +65,11 @@ func _UpdateStats(info : Dictionary) -> void:
 	_abandoned_value.text = "%s"%[info.abandoned]
 	_deaths_value.text = "%s"%[info.deaths]
 	_kills_value.text = "%s"%[info.kills]
+	if info.runs > 0:
+		_kpr_value.text = "%02d"%[float(info.kills) / float(info.runs)]
+	else:
+		_kpr_value.text = "0.00"
+	
 	if info.deaths <= 0:
 		_kdr_value.text = "INF"
 	else:

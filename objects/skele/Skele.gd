@@ -16,6 +16,7 @@ const ATT_DRAG : float = 0.2
 const ATT_DUR : float = 0.5
 
 const MAX_HITS : int = 2
+const HIT_PUSH_DUR : float = 0.5
 
 # ------------------------------------------------------------------------------
 # Export Variables
@@ -28,11 +29,14 @@ const MAX_HITS : int = 2
 # ------------------------------------------------------------------------------
 var _target : WeakRef = weakref(null)
 var _target_last_pos : Vector2 = Vector2.ZERO
+var _target_attackable : bool = false
 
+var _wake_body_seen : bool = false
 var _appeared : bool = false
 var _spawned : bool = false
 
 var _hits : int = 0
+var _hit_dir : Vector2 = Vector2.ZERO
 
 
 # ------------------------------------------------------------------------------
@@ -71,10 +75,16 @@ func _ready() -> void:
 	_anim.play("appear")
 
 func _physics_process(delta : float) -> void:
-	if Engine.is_editor_hint() or not _spawned or _anim.current_animation == &"attack":
+	if Engine.is_editor_hint():
 		return
 	
 	_UpdateTarget()
+	if not _spawned or _anim.current_animation == &"attack":
+		return
+	if _target_attackable and _hit_dir.length_squared() <= 0.0:
+		_anim.play(&"attack")
+		return
+	
 	var target : Node2D = _target.get_ref()
 	if target != null:
 		if target.global_position != _target_last_pos:
@@ -84,7 +94,9 @@ func _physics_process(delta : float) -> void:
 	
 	if _agent.is_target_reachable() and not _agent.is_target_reached():
 		var nloc : Vector2 = _agent.get_next_location()
-		var dir : Vector2 = global_position.direction_to(nloc)
+		var dir : Vector2 = _hit_dir
+		if dir.length_squared() <= 0.0:
+			dir = global_position.direction_to(nloc)
 		velocity += ((dir * SPEED) - velocity) * delta
 		move_and_slide()
 
@@ -127,15 +139,22 @@ func kill() -> void:
 	if Engine.is_editor_hint():
 		return
 	
-	_hits += 1
-	if _hits >= MAX_HITS:
-		set_physics_process(false)
-		killed.emit()
-		Statistics.mob_killed()
-		#anim.play("death")
-		#sfx.play_group(&"death")
-		#await anim.animation_finished
-		queue_free()
+	if _hit_dir.length_squared() <= 0.0:
+		_hits += 1
+		if _hits >= MAX_HITS:
+			set_physics_process(false)
+			killed.emit()
+			Statistics.mob_killed()
+			#anim.play("death")
+			#sfx.play_group(&"death")
+			#await anim.animation_finished
+			queue_free()
+		else:
+			var target = _target.get_ref()
+			if target != null:
+				_hit_dir = target.global_position.direction_to(global_position)
+				var timer : SceneTreeTimer = get_tree().create_timer(HIT_PUSH_DUR)
+				timer.timeout.connect(func(): _hit_dir = Vector2.ZERO)
 
 # ------------------------------------------------------------------------------
 # Handler Methods
@@ -147,16 +166,28 @@ func _on_animation_finished(anim_name : StringName) -> void:
 		&"spawn":
 			_spawned = true
 		&"attack":
-			_anim.play("idle")
+			if _target_attackable:
+				_anim.play(&"attack")
+			else:
+				_anim.play(&"idle")
 
 func _on_AttackArea_body_entered(body : Node2D) -> void:
-	if _spawned and _anim.current_animation != &"attack":
-		if body.is_in_group(TARGET_GROUP) and body == _target.get_ref():
-			_anim.play(&"attack")
+	if body.is_in_group(TARGET_GROUP) and body == _target.get_ref():
+		_target_attackable = true
+	
+#	if _spawned and _anim.current_animation != &"attack":
+#		if body.is_in_group(TARGET_GROUP) and body == _target.get_ref():
+#			_target_attackable = true
+#			_anim.play(&"attack")
+
+func _on_AttackArea_body_exited(body : Node2D) -> void:
+	if body == _target.get_ref() or _target.get_ref() == null:
+		_target_attackable = false
 
 func _on_wake_area_body_entered(body):
-	if not _appeared:
-		return
-	elif not _spawned:
-		if body.is_in_group(TARGET_GROUP) and _anim.current_animation != &"spawn":
-			_anim.play(&"spawn")
+	if body.is_in_group(TARGET_GROUP):
+		if not _appeared:
+			_wake_body_seen = true
+		elif not _spawned:
+			if _anim.current_animation != &"spawn":
+				_anim.play(&"spawn")

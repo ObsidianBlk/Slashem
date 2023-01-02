@@ -1,6 +1,7 @@
 shader_type canvas_item;
 
 uniform vec4 region = vec4(1.0);
+uniform vec4 color : source_color = vec4(1.0);
 
 vec2 remap_uv(vec2 uv, vec2 scale){
 	float dx = region.x * scale.x;
@@ -12,5 +13,8 @@ vec2 remap_uv(vec2 uv, vec2 scale){
 
 void fragment() {
 	vec2 uv = remap_uv(UV, TEXTURE_PIXEL_SIZE);
-	COLOR = texture(TEXTURE, uv);
+	vec4 original = texture(TEXTURE, uv);
+	if (original.r >= 0.97 && original.g >= 0.97 && original.b >= 0.97)
+		original = vec4(color.rgb, original.a);
+	COLOR = original;
 }

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://8qu2xfbqea52"]
+[gd_scene load_steps=27 format=3 uid="uid://8qu2xfbqea52"]
 
 [ext_resource type="Script" path="res://objects/player/Player.gd" id="1_3118y"]
 [ext_resource type="Texture2D" uid="uid://ch76m21gtrq87" path="res://assets/graphics/monochrome-transparent_packed.png" id="1_c1fmy"]
@@ -11,6 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://5hu3ve3cokn4" path="res://assets/audio/player/swish_002.wav" id="9_c0nxp"]
 [ext_resource type="AudioStream" uid="uid://c3s408i7npktv" path="res://assets/audio/player/swish_003.wav" id="10_sbcsa"]
 [ext_resource type="AudioStream" uid="uid://cb3spkesr2dwr" path="res://assets/audio/player/impact.wav" id="11_ij1bu"]
+[ext_resource type="AudioStream" uid="uid://dt6af8bjxlid0" path="res://assets/audio/player/death.wav" id="12_ul1sk"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tdcd6"]
 radius = 8.0
@@ -891,8 +892,8 @@ libraries = {
 }
 
 [node name="SFX" parent="." instance=ExtResource("4_3k6ig")]
-sample_names = [&"step001", &"step002", &"step003", &"swish001", &"swish002", &"swish003", &"impact"]
-sample_streams = [ExtResource("5_tj4cm"), ExtResource("6_laijq"), ExtResource("7_d25pu"), ExtResource("8_6faa5"), ExtResource("9_c0nxp"), ExtResource("10_sbcsa"), ExtResource("11_ij1bu")]
+sample_names = [&"step001", &"step002", &"step003", &"swish001", &"swish002", &"swish003", &"impact", &"death"]
+sample_streams = [ExtResource("5_tj4cm"), ExtResource("6_laijq"), ExtResource("7_d25pu"), ExtResource("8_6faa5"), ExtResource("9_c0nxp"), ExtResource("10_sbcsa"), ExtResource("11_ij1bu"), ExtResource("12_ul1sk")]
 sample_groups = ["step,step001,step002,step003", "swish,swish001,swish002,swish003"]
 
 [connection signal="body_entered" from="Swivel/HitZone" to="." method="_on_hit_zone_body_entered"]

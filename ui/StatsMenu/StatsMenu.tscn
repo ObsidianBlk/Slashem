@@ -15,166 +15,137 @@ theme_override_constants/margin_bottom = 8
 script = ExtResource("1_6pwgs")
 
 [node name="Layout" type="VBoxContainer" parent="."]
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 632.0
-offset_bottom = 352.0
+layout_mode = 2
 
 [node name="MainTitle" type="Label" parent="Layout"]
-offset_right = 624.0
-offset_bottom = 42.0
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.901961, 0.580392, 1)
 theme_override_font_sizes/font_size = 28
 text = "Statistics"
 horizontal_alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="Layout"]
-offset_top = 46.0
-offset_right = 624.0
-offset_bottom = 50.0
+layout_mode = 2
 
 [node name="Info" type="GridContainer" parent="Layout"]
-offset_top = 54.0
-offset_right = 624.0
-offset_bottom = 301.0
+layout_mode = 2
 size_flags_vertical = 3
 columns = 2
 
 [node name="LooseInfo" type="VBoxContainer" parent="Layout/Info"]
-offset_right = 310.0
-offset_bottom = 146.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Runs" type="HBoxContainer" parent="Layout/Info/LooseInfo"]
-offset_right = 310.0
-offset_bottom = 26.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="Layout/Info/LooseInfo/Runs"]
-offset_right = 43.0
-offset_bottom = 26.0
+layout_mode = 2
 text = "Runs:"
 
 [node name="Value" type="Label" parent="Layout/Info/LooseInfo/Runs"]
-offset_left = 47.0
-offset_right = 310.0
-offset_bottom = 26.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.901961, 0.470588, 1)
 text = "0"
 horizontal_alignment = 2
 
 [node name="Abandoned" type="HBoxContainer" parent="Layout/Info/LooseInfo"]
-offset_top = 30.0
-offset_right = 310.0
-offset_bottom = 56.0
+visible = false
+layout_mode = 2
 
 [node name="Label" type="Label" parent="Layout/Info/LooseInfo/Abandoned"]
-offset_right = 94.0
-offset_bottom = 26.0
+layout_mode = 2
 text = "Abandoned:"
 
 [node name="Value" type="Label" parent="Layout/Info/LooseInfo/Abandoned"]
-offset_left = 98.0
-offset_right = 310.0
-offset_bottom = 26.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.901961, 0.470588, 1)
 text = "0"
 horizontal_alignment = 2
 
 [node name="Deaths" type="HBoxContainer" parent="Layout/Info/LooseInfo"]
-offset_top = 60.0
-offset_right = 310.0
-offset_bottom = 86.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="Layout/Info/LooseInfo/Deaths"]
-offset_right = 59.0
-offset_bottom = 26.0
+layout_mode = 2
 text = "Deaths:"
 
 [node name="Value" type="Label" parent="Layout/Info/LooseInfo/Deaths"]
-offset_left = 63.0
-offset_right = 310.0
-offset_bottom = 26.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.901961, 0.470588, 1)
 text = "0"
 horizontal_alignment = 2
 
 [node name="Kills" type="HBoxContainer" parent="Layout/Info/LooseInfo"]
-offset_top = 90.0
-offset_right = 310.0
-offset_bottom = 116.0
+layout_mode = 2
 
 [node name="Label" type="Label" parent="Layout/Info/LooseInfo/Kills"]
-offset_right = 36.0
-offset_bottom = 26.0
+layout_mode = 2
 text = "Kills:"
 
 [node name="Value" type="Label" parent="Layout/Info/LooseInfo/Kills"]
-offset_left = 40.0
-offset_right = 310.0
-offset_bottom = 26.0
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.901961, 0.470588, 1)
+text = "0"
+horizontal_alignment = 2
+
+[node name="AvgKPR" type="HBoxContainer" parent="Layout/Info/LooseInfo"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Layout/Info/LooseInfo/AvgKPR"]
+layout_mode = 2
+text = "Avg. Kills per Run:"
+
+[node name="Value" type="Label" parent="Layout/Info/LooseInfo/AvgKPR"]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.901961, 0.470588, 1)
 text = "0"
 horizontal_alignment = 2
 
 [node name="KDR" type="HBoxContainer" parent="Layout/Info/LooseInfo"]
-offset_top = 120.0
-offset_right = 310.0
-offset_bottom = 146.0
+visible = false
+layout_mode = 2
 
 [node name="Label" type="Label" parent="Layout/Info/LooseInfo/KDR"]
-offset_right = 77.0
-offset_bottom = 26.0
+layout_mode = 2
 text = "K/D Ratio:"
 
 [node name="Value" type="Label" parent="Layout/Info/LooseInfo/KDR"]
-offset_left = 81.0
-offset_right = 310.0
-offset_bottom = 26.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.901961, 0.470588, 1)
 text = "0"
 horizontal_alignment = 2
 
 [node name="TopRuns" type="ScrollContainer" parent="Layout/Info"]
-offset_left = 314.0
-offset_right = 624.0
-offset_bottom = 146.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Items" type="VBoxContainer" parent="Layout/Info/TopRuns"]
+layout_mode = 2
 
 [node name="HSeparator2" type="HSeparator" parent="Layout"]
-offset_top = 305.0
-offset_right = 624.0
-offset_bottom = 309.0
+layout_mode = 2
 
 [node name="Options" type="HBoxContainer" parent="Layout"]
-offset_top = 313.0
-offset_right = 624.0
-offset_bottom = 344.0
+layout_mode = 2
 
 [node name="Back" type="Button" parent="Layout/Options"]
-offset_right = 205.0
-offset_bottom = 31.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Back"
 
 [node name="Spacer" type="Control" parent="Layout/Options"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 209.0
-offset_right = 414.0
-offset_bottom = 31.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Reset" type="Button" parent="Layout/Options"]
-offset_left = 418.0
-offset_right = 624.0
-offset_bottom = 31.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Reset
 "

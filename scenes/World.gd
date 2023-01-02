@@ -32,6 +32,7 @@ func _ready() -> void:
 	Statistics.run_completed.connect(_on_game_completed)
 	if config.load(CONFIG_PATH) == OK:
 		Statistics.load_from_config(config)
+		GAS.load_from_config(config)
 	get_tree().paused = true
 
 # ------------------------------------------------------------------------------
@@ -60,9 +61,12 @@ func _PrepareGame() -> void:
 		_player.revive()
 		_player.visible = true
 		_LoadLevel(DEFAULT_LEVEL_PATH)
-		_effects.fade_in(TRANSITION_TIME, finalize)
+		if _level != null:
+			_level.start_music(TRANSITION_TIME)
+			_effects.fade_in(TRANSITION_TIME, finalize)
 
 func _ClearOutGame() -> void:
+	get_tree().paused = true
 	remove_child(_level)
 	_level.queue_free()
 	_level = null
@@ -74,6 +78,7 @@ func _ClearOutGame() -> void:
 
 func _UpdateConfig() -> void:
 	Statistics.save_to_config(config)
+	GAS.save_to_config(config)
 	config.save(CONFIG_PATH)
 
 # ------------------------------------------------------------------------------
@@ -84,12 +89,15 @@ func _on_ghost_killed() -> void:
 
 func _on_game_completed(_player_died : bool) -> void:
 	_UpdateConfig()
-	get_tree().paused = true
+	_level.end_music(TRANSITION_TIME)
 	_effects.fade_out(TRANSITION_TIME, _ClearOutGame)
 
 func _on_ui_request_sent(info : Dictionary):
 	if &"request" in info:
 		match info[&"request"]:
+			&"apply_audio_config":
+				GAS.save_to_config(config)
+				config.save(CONFIG_PATH)
 			&"start_game":
 				if not _game_active:
 					_game_active = true

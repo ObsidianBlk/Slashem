@@ -1,0 +1,127 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqm0u1kt0wrli"]
+
+[ext_resource type="Script" path="res://ui/Options/Options.gd" id="1_slwa2"]
+
+[node name="Options" type="CenterContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_slwa2")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+offset_left = 220.0
+offset_top = 96.0
+offset_right = 419.0
+offset_bottom = 263.0
+
+[node name="Label" type="Label" parent="Layout"]
+offset_right = 199.0
+offset_bottom = 26.0
+text = "OPTIONS"
+
+[node name="HSeparator" type="HSeparator" parent="Layout"]
+offset_top = 30.0
+offset_right = 199.0
+offset_bottom = 34.0
+
+[node name="Master" type="HBoxContainer" parent="Layout"]
+offset_top = 38.0
+offset_right = 199.0
+offset_bottom = 64.0
+
+[node name="Label" type="Label" parent="Layout/Master"]
+offset_right = 63.0
+offset_bottom = 26.0
+text = "Master: "
+
+[node name="Control" type="Control" parent="Layout/Master"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 67.0
+offset_right = 67.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="HSlider" type="HSlider" parent="Layout/Master"]
+custom_minimum_size = Vector2(128, 0)
+offset_left = 71.0
+offset_right = 199.0
+offset_bottom = 16.0
+
+[node name="Music" type="HBoxContainer" parent="Layout"]
+offset_top = 68.0
+offset_right = 199.0
+offset_bottom = 94.0
+
+[node name="Label" type="Label" parent="Layout/Music"]
+offset_right = 54.0
+offset_bottom = 26.0
+text = "Music: "
+
+[node name="Control" type="Control" parent="Layout/Music"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 58.0
+offset_right = 67.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="HSlider" type="HSlider" parent="Layout/Music"]
+custom_minimum_size = Vector2(128, 0)
+offset_left = 71.0
+offset_right = 199.0
+offset_bottom = 16.0
+
+[node name="SFX" type="HBoxContainer" parent="Layout"]
+offset_top = 98.0
+offset_right = 199.0
+offset_bottom = 124.0
+
+[node name="Label" type="Label" parent="Layout/SFX"]
+offset_right = 36.0
+offset_bottom = 26.0
+text = "SFX: "
+
+[node name="Control" type="Control" parent="Layout/SFX"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 40.0
+offset_right = 67.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+
+[node name="HSlider" type="HSlider" parent="Layout/SFX"]
+custom_minimum_size = Vector2(128, 0)
+offset_left = 71.0
+offset_right = 199.0
+offset_bottom = 16.0
+
+[node name="HSeparator2" type="HSeparator" parent="Layout"]
+offset_top = 128.0
+offset_right = 199.0
+offset_bottom = 132.0
+
+[node name="Nav" type="HBoxContainer" parent="Layout"]
+offset_top = 136.0
+offset_right = 199.0
+offset_bottom = 167.0
+
+[node name="Apply" type="Button" parent="Layout/Nav"]
+offset_right = 52.0
+offset_bottom = 31.0
+text = "Apply"
+
+[node name="Control" type="Control" parent="Layout/Nav"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 56.0
+offset_right = 199.0
+offset_bottom = 31.0
+size_flags_horizontal = 3
+
+[connection signal="value_changed" from="Layout/Master/HSlider" to="." method="_on_master_value_changed"]
+[connection signal="value_changed" from="Layout/Music/HSlider" to="." method="_on_music_value_changed"]
+[connection signal="value_changed" from="Layout/SFX/HSlider" to="." method="_on_sfx_value_changed"]
+[connection signal="pressed" from="Layout/Nav/Apply" to="." method="_on_apply_pressed"]

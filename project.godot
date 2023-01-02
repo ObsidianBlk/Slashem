@@ -33,6 +33,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+GAS="*res://scripts/auto/GAS.gd"
 Statistics="*res://scripts/auto/Statistics.gd"
 
 [display]

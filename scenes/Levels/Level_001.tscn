@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://c06lmhp5eqkhn"]
+[gd_scene load_steps=8 format=3 uid="uid://c06lmhp5eqkhn"]
 
 [ext_resource type="Script" path="res://scenes/Levels/Level.gd" id="1_4xgxp"]
 [ext_resource type="Shader" path="res://shader/recolor.gdshader" id="1_n8wxc"]
 [ext_resource type="TileSet" uid="uid://bq5radnxh5jll" path="res://assets/graphics/tileset.tres" id="2_inj5w"]
 [ext_resource type="PackedScene" uid="uid://cohoadsdswypi" path="res://objects/ghost_spawner/GhostSpawner.tscn" id="3_evjvs"]
 [ext_resource type="PackedScene" uid="uid://c3f85b4pdqthp" path="res://objects/skele_spawner/SkeleSpawner.tscn" id="5_5vop5"]
+[ext_resource type="AudioStream" uid="uid://cwmdjvv21cfy2" path="res://assets/audio/music/they_are_coming.ogg" id="6_bnny7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nyft4"]
 shader = ExtResource("1_n8wxc")
@@ -50,3 +51,7 @@ spawn_radius = 35.0
 [node name="SkeleSpawner4" parent="." instance=ExtResource("5_5vop5")]
 position = Vector2(-85, -6)
 spawn_radius = 35.0
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_bnny7")
+bus = &"Music"

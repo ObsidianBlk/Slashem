@@ -91,7 +91,7 @@ func _ready() -> void:
 
 func _unhandled_input(event : InputEvent) -> void:
 	if _hp <= 0.0 or Engine.is_editor_hint():
-		return
+		_dir = Vector2.ZERO
 	
 	if event.is_action("up") or event.is_action("down"):
 		_dir.y = Input.get_action_strength("down") - Input.get_action_strength("up")
@@ -188,7 +188,9 @@ func hurt(amount : float, drag : float = 0.0, dur : float = 0.0) -> void:
 	_hp = max(0.0, min(MAX_HP, _hp - amount))
 	hp_changed.emit(_hp, MAX_HP)
 	if _hp <= 0.0:
-		Statistics.player_died()
+		if not _sfx.is_stream_playing(&"death"):
+			_sfx.play(&"death", true, 0)
+			Statistics.player_died()
 	elif drag > 0.0 and dur > 0.0:
 		_drag_mult = 1.0 - drag
 		if _drag_time != null:
@@ -213,7 +215,7 @@ func _on_sword_attack(v : float) -> void:
 				if _swish_audio == false:
 					_Impact()
 					_swish_audio = true
-		_bodies.clear()
+		#_bodies.clear()
 	if _swish_audio == false:
 		_sfx.play_group(&"swish", true, 2)
 		_swish_audio = true
@@ -234,7 +236,7 @@ func _on_hit_zone_body_entered(body : Node2D) -> void:
 		if _attacking and body.can_kill():
 			_Impact()
 			body.kill()
-		elif _bodies.find(body) < 0:
+		if _bodies.find(body) < 0:
 			_bodies.append(body)
 
 func _on_hit_zone_body_exited(body : Node2D) -> void:

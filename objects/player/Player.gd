@@ -148,6 +148,13 @@ func _SwingSword() -> void:
 	_attacking = true
 	var tween : Tween = create_tween()
 	_swish_audio = false
+	if _bodies.size() > 0:
+		for body in _bodies:
+			if body.can_kill():
+				body.kill()
+				if _swish_audio == false:
+					_Impact()
+					_swish_audio = true
 	tween.tween_method(_on_sword_attack, 0.0, SWORD_ARC, 0.1)
 	tween.tween_method(_on_sword_return, SWORD_ARC, 0.0, 0.25)
 	await tween.finished
@@ -208,14 +215,6 @@ func revive() -> void:
 # Handler Methods
 # ------------------------------------------------------------------------------
 func _on_sword_attack(v : float) -> void:
-	if _bodies.size() > 0:
-		for body in _bodies:
-			if body.can_kill():
-				body.kill()
-				if _swish_audio == false:
-					_Impact()
-					_swish_audio = true
-		#_bodies.clear()
 	if _swish_audio == false:
 		_sfx.play_group(&"swish", true, 2)
 		_swish_audio = true

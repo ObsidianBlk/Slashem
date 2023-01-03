@@ -16,12 +16,15 @@ const ATT_DRAG : float = 0.2
 const ATT_DUR : float = 0.5
 
 const MAX_HITS : int = 2
-const HIT_PUSH_DUR : float = 0.5
+const HIT_PUSH_DUR : float = 1.0
+
+const WAKEUP_TIME : float = 5.0
 
 # ------------------------------------------------------------------------------
 # Export Variables
 # ------------------------------------------------------------------------------
 @export var skele_color : Color = Color.WHEAT :				set = set_skele_color
+@export var skele_dead_color : Color = Color.ROSY_BROWN
 @export var ground_color : Color = Color.SIENNA :			set = set_ground_color
 
 # ------------------------------------------------------------------------------
@@ -75,12 +78,21 @@ func _ready() -> void:
 	_anim.play("appear")
 
 func _physics_process(delta : float) -> void:
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() or _anim.current_animation == "death":
 		return
 	
 	_UpdateTarget()
-	if not _spawned or _anim.current_animation == &"attack":
+	if not _spawned:
 		return
+	
+	if _anim.current_animation == &"attack":
+		if _hit_dir.length_squared() > 0.0:
+			velocity += ((_hit_dir * SPEED) - velocity) * delta
+			move_and_slide()
+		else:
+			velocity = Vector2.ZERO
+		return
+	
 	if _target_attackable and _hit_dir.length_squared() <= 0.0:
 		_anim.play(&"attack")
 		return
@@ -95,7 +107,7 @@ func _physics_process(delta : float) -> void:
 	if _agent.is_target_reachable() and not _agent.is_target_reached():
 		var nloc : Vector2 = _agent.get_next_location()
 		var dir : Vector2 = _hit_dir
-		if dir.length_squared() <= 0.0:
+		if _hit_dir.length_squared() <= 0.0:
 			dir = global_position.direction_to(nloc)
 		velocity += ((dir * SPEED) - velocity) * delta
 		move_and_slide()
@@ -109,14 +121,17 @@ func _UpdateSpriteColor(sp : Sprite2D, c : Color) -> void:
 		if mat != null:
 			mat.set_shader_parameter("color", c)
 
+func _UpdateSkeleColor(c : Color) -> void:
+	_UpdateSpriteColor(_head, c)
+	_UpdateSpriteColor(_body, c)
+	_UpdateSpriteColor(_arm_l, c)
+	_UpdateSpriteColor(_arm_r, c)
+	_UpdateSpriteColor(_leg_l, c)
+	_UpdateSpriteColor(_leg_r, c)
+
 func _UpdateShaderColor() -> void:
 	_UpdateSpriteColor(_spawn, ground_color)
-	_UpdateSpriteColor(_head, skele_color)
-	_UpdateSpriteColor(_body, skele_color)
-	_UpdateSpriteColor(_arm_l, skele_color)
-	_UpdateSpriteColor(_arm_r, skele_color)
-	_UpdateSpriteColor(_leg_l, skele_color)
-	_UpdateSpriteColor(_leg_r, skele_color)
+	_UpdateSkeleColor(skele_color)
 
 func _UpdateTarget() -> void:
 	if _target.get_ref() == null:
@@ -136,25 +151,25 @@ func can_kill() -> bool:
 	return _spawned
 
 func kill() -> void:
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() or _anim.current_animation == "death":
 		return
 	
-	if _hit_dir.length_squared() <= 0.0:
-		_hits += 1
-		if _hits >= MAX_HITS:
-			set_physics_process(false)
-			killed.emit()
-			Statistics.mob_killed()
-			#anim.play("death")
-			#sfx.play_group(&"death")
-			#await anim.animation_finished
-			queue_free()
-		else:
-			var target = _target.get_ref()
-			if target != null:
-				_hit_dir = target.global_position.direction_to(global_position)
-				var timer : SceneTreeTimer = get_tree().create_timer(HIT_PUSH_DUR)
-				timer.timeout.connect(func(): _hit_dir = Vector2.ZERO)
+	_hits += 1
+	if _hits >= MAX_HITS:
+		set_physics_process(false)
+		killed.emit()
+		Statistics.mob_killed()
+		_UpdateSkeleColor(skele_dead_color)
+		_anim.play("death")
+		#sfx.play_group(&"death")
+		await _anim.animation_finished
+		queue_free()
+	elif _hit_dir.length_squared() <= 0.0:
+		var target = _target.get_ref()
+		if target != null:
+			_hit_dir = target.global_position.direction_to(global_position)
+			var timer : SceneTreeTimer = get_tree().create_timer(HIT_PUSH_DUR)
+			timer.timeout.connect(func(): _hit_dir = Vector2.ZERO)
 
 # ------------------------------------------------------------------------------
 # Handler Methods
@@ -163,6 +178,11 @@ func _on_animation_finished(anim_name : StringName) -> void:
 	match anim_name:
 		&"appear":
 			_appeared = true
+			var timer : SceneTreeTimer = get_tree().create_timer(WAKEUP_TIME)
+			timer.timeout.connect(func():
+				if not _spawned and _anim.current_animation != &"spawn":
+					_anim.play(&"spawn")
+			)
 		&"spawn":
 			_spawned = true
 		&"attack":
@@ -174,11 +194,6 @@ func _on_animation_finished(anim_name : StringName) -> void:
 func _on_AttackArea_body_entered(body : Node2D) -> void:
 	if body.is_in_group(TARGET_GROUP) and body == _target.get_ref():
 		_target_attackable = true
-	
-#	if _spawned and _anim.current_animation != &"attack":
-#		if body.is_in_group(TARGET_GROUP) and body == _target.get_ref():
-#			_target_attackable = true
-#			_anim.play(&"attack")
 
 func _on_AttackArea_body_exited(body : Node2D) -> void:
 	if body == _target.get_ref() or _target.get_ref() == null:

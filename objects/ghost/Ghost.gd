@@ -102,7 +102,7 @@ func can_kill() -> bool:
 	return true
 
 func kill() -> void:
-	if Engine.is_editor_hint() or anim.current_animation == "dead":
+	if Engine.is_editor_hint() or anim.current_animation == "death":
 		return
 	
 	set_physics_process(false)
